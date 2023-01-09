@@ -1,7 +1,8 @@
 #include <iostream>
 #include <vector>
 #include <string>
-#include <algorithm>
+#include <chrono>
+#include <thread>
 
 #define OLC_PGE_APPLICATION
 #include "../commonlib/olcPixelGameEngine.h"
@@ -32,14 +33,37 @@ protected:
         // set initial cell states
         for (auto i = 0; i < totalScreen; i++)
         {
-            state[i] = rand() % 2;
+            state[i] = rand() % 2; // initialize cells randonly
         }
 
+        // one more lambda function
+        auto set = [&](int x, int y, std::wstring s)
+        {
+            int p = 0;
+            for (auto c : s)
+            {
+                state[y * ScreenWidth() + x + p] = c == L'#' ? 1 : 0;
+                p++;
+            }
+        };
+
+       /* // R-Pentonimo
+        set(80, 50, L"  ## ");
+        set(80, 50, L" ##  ");
+        set(80, 50, L" #   ");
+*/
         return true;
     }
 
     bool OnUserUpdate(float fElapsedTime) override
     {
+        /*if (!GetKey(olc::Key::SPACE).bHeld)
+        {
+            return true; // can be used to stop and see the state
+        }*/
+        // delay a bit
+        std::this_thread::sleep_for( std::chrono::milliseconds(25));
+
         // lambda function - I need to study it more
         auto cell = [&](int x, int y)
         {
