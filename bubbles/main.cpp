@@ -32,6 +32,8 @@ private:
     std::vector<std::pair<float, float>> modelBubble;
     std::vector<Bubble> vecBubbles;
 
+    Bubble *selectedBubble = nullptr;
+
     void addBubble(float x, float y, float r = 5.0f)
     {
         Bubble c;
@@ -79,6 +81,39 @@ public:
             return fabs((x1 - x2) * (x2 - x2) + (y1 - y2) * (y1 - y2) <= (r1 + r2) * (r1 + r2));
         };
 
+        auto isPointInBubble = [](float x1, float y1, float r1, float px, float py)
+        {
+            return fabs((x1 - px)*(x1 -px) + (y1 -py)*(y1-py)) < (r1 * r1);
+        };
+
+        // interect with the bubbles using mouse
+        if(GetMouse(olc::Mouse::LEFT).bPressed)
+        {
+            selectedBubble = nullptr;
+            for(auto &bubble : vecBubbles)
+            {
+                if(isPointInBubble(bubble.px, bubble.py, bubble.radius, GetMouseX(), GetMouseY()))
+                {
+                    selectedBubble = &bubble; // select the bubble
+                    break;
+                }
+            }
+        }
+
+        if(GetMouse(olc::Mouse::LEFT).bHeld)
+        {
+            if(selectedBubble != nullptr)
+            {
+                selectedBubble->px = GetMouseX();
+                selectedBubble->py = GetMouseY();
+            }
+        }
+
+        if(GetMouse(olc::Mouse::LEFT).bReleased)
+        {
+            selectedBubble = nullptr;
+        }
+
         for(auto &bubble : vecBubbles) // teste every bubble
         {
             for (auto &target : vecBubbles) // teste against a target bubble
@@ -88,12 +123,15 @@ public:
                 {
                     if (doBubblesOverlap(bubble.px, bubble.py, bubble.radius, target.px, target.py, target.radius))
                     {
+                        // distance between bubble centers
+
                     }
                 }
             }
         }
 
         PixelGameEngine::ConsoleClear();
+        Clear(olc::BLACK);
 
         // Draw Bubbles
         for (auto bubble : vecBubbles)
