@@ -23,10 +23,10 @@ struct Bubble
 class BubblePhysics : public olc::PixelGameEngine
 {
 public:
-	BubblePhysics()
-	{
-		sAppName = "Bubbles Physics";
-	}
+    BubblePhysics()
+    {
+        sAppName = "Bubbles Physics";
+    }
 
 private:
     std::vector<std::pair<float, float>> modelBubble;
@@ -50,8 +50,8 @@ private:
     }
 
 public:
-	bool OnUserCreate() override
-	{
+    bool OnUserCreate() override
+    {
         // Called once at the start, so create things here
 
         // Define bubble model
@@ -64,11 +64,11 @@ public:
 
         float defaultRadius = 8.0f;
         // Add Bubbles
-        //addBubble(ScreenWidth() * 0.25f, ScreenHeight() * 0.5f, defaultRadius);
-        //addBubble(ScreenWidth() * 0.75f, ScreenHeight() * 0.5f, defaultRadius);
+        // addBubble(ScreenWidth() * 0.25f, ScreenHeight() * 0.5f, defaultRadius);
+        // addBubble(ScreenWidth() * 0.75f, ScreenHeight() * 0.5f, defaultRadius);
 
         // adding 10 bubbles in randon locations
-        for(int i = 0; i < 10; i++)
+        for (int i = 0; i < 10; i++)
         {
             addBubble(rand() % ScreenWidth(), rand() % ScreenHeight(), defaultRadius); // not really randon
         }
@@ -95,12 +95,12 @@ public:
         // INPUT ===========================================================================================================================
 
         // interect with the bubbles using mouse
-        if(GetMouse(olc::Mouse::LEFT).bPressed || GetMouse(olc::Mouse::RIGHT).bPressed)
+        if (GetMouse(olc::Mouse::LEFT).bPressed || GetMouse(olc::Mouse::RIGHT).bPressed)
         {
             selectedBubble = nullptr;
-            for(auto &bubble : vecBubbles)
+            for (auto &bubble : vecBubbles)
             {
-                if(isPointInBubble(bubble.px, bubble.py, bubble.radius, GetMouseX(), GetMouseY()))
+                if (isPointInBubble(bubble.px, bubble.py, bubble.radius, GetMouseX(), GetMouseY()))
                 {
                     selectedBubble = &bubble; // select the bubble
                     break;
@@ -108,23 +108,23 @@ public:
             }
         }
 
-        if(GetMouse(olc::Mouse::LEFT).bHeld)
+        if (GetMouse(olc::Mouse::LEFT).bHeld)
         {
-            if(selectedBubble != nullptr)
+            if (selectedBubble != nullptr)
             {
                 selectedBubble->px = GetMouseX();
                 selectedBubble->py = GetMouseY();
             }
         }
 
-        if(GetMouse(olc::Mouse::LEFT).bReleased)
+        if (GetMouse(olc::Mouse::LEFT).bReleased)
         {
             selectedBubble = nullptr;
         }
-    
-        if(GetMouse(olc::Mouse::RIGHT).bReleased)
+
+        if (GetMouse(olc::Mouse::RIGHT).bReleased)
         {
-            if(selectedBubble != nullptr)
+            if (selectedBubble != nullptr)
             {
                 // apply velocity
                 selectedBubble->vx = 5.0f * ((selectedBubble->px) - (float)GetMouseX());
@@ -161,7 +161,7 @@ public:
                 bubble.py -= (float)ScreenHeight();
             }
 
-            if(fabs(bubble.vx * bubble.vx + bubble.vy*bubble.vy) < 0.01f) // stop is had coded
+            if (fabs(bubble.vx * bubble.vx + bubble.vy * bubble.vy) < 0.01f) // stop is had coded
             {
                 bubble.vx = 0;
                 bubble.vy = 0;
@@ -225,7 +225,7 @@ public:
         }
 
         // Draw cue
-        if(selectedBubble != nullptr)
+        if (selectedBubble != nullptr)
         {
             DrawLine(selectedBubble->px, selectedBubble->py, GetMouseX(), GetMouseY(), olc::BLUE);
         }
