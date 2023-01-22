@@ -54,7 +54,7 @@ public:
 	{
         // Called once at the start, so create things here
 
-        // Defeine bubble model
+        // Define bubble model
         modelBubble.push_back({0.0f, 0.0f});
         int points = 20;
         for (int i = 0; i < points; i++)
@@ -64,8 +64,14 @@ public:
 
         float defaultRadius = 8.0f;
         // Add Bubbles
-        addBubble(ScreenWidth() * 0.25f, ScreenHeight() * 0.5f, defaultRadius);
-        addBubble(ScreenWidth() * 0.75f, ScreenHeight() * 0.5f, defaultRadius);
+        //addBubble(ScreenWidth() * 0.25f, ScreenHeight() * 0.5f, defaultRadius);
+        //addBubble(ScreenWidth() * 0.75f, ScreenHeight() * 0.5f, defaultRadius);
+
+        // adding 10 bubbles in randon locations
+        for(int i = 0; i < 10; i++)
+        {
+            addBubble(rand() % ScreenWidth(), rand() % ScreenHeight(), defaultRadius); // not really randon
+        }
 
         return true;
     }
@@ -114,6 +120,8 @@ public:
             selectedBubble = nullptr;
         }
 
+        std::vector<std::pair<Bubble*, Bubble*>> vecCollidingPairs;
+
         for(auto &bubble : vecBubbles) // teste every bubble
         {
             for (auto &target : vecBubbles) // teste against a target bubble
@@ -123,6 +131,9 @@ public:
                 {
                     if (doBubblesOverlap(bubble.px, bubble.py, bubble.radius, target.px, target.py, target.radius))
                     {
+                        // collision occured
+                        vecCollidingPairs.push_back({&bubble, &target});
+
                         // distance between bubble centers
                         float distance = sqrtf((bubble.px - target.px) * (bubble.px - target.px) + (bubble.py - target.py) * (bubble.py - target.py));
 
@@ -140,6 +151,14 @@ public:
             }
         }
 
+        /// work out dynamic collisions
+        for (auto c : vecCollidingPairs)
+        {
+            // the vector contain only the colliding objects
+            Bubble *b1 = c.first;
+            Bubble *b2 = c.second;
+        }
+
         PixelGameEngine::ConsoleClear();
         Clear(olc::BLACK);
 
@@ -147,6 +166,11 @@ public:
         for (auto bubble : vecBubbles)
         {
             DrawCircle(bubble.px, bubble.py, bubble.radius);
+        }
+        // Draw line
+        for (auto c : vecCollidingPairs)
+        {
+            DrawLine(c.first->px, c.first->py, c.second->px, c.second->py, olc::RED);
         }
 
         return true;
