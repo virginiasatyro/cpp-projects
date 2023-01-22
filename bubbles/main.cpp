@@ -92,8 +92,10 @@ public:
             return fabs((x1 - px) * (x1 - px)) + ((y1 - py) * (y1 - py)) < (r1 * r1);
         };
 
+        // INPUT ===========================================================================================================================
+
         // interect with the bubbles using mouse
-        if(GetMouse(olc::Mouse::LEFT).bPressed)
+        if(GetMouse(olc::Mouse::LEFT).bPressed || GetMouse(olc::Mouse::RIGHT).bPressed)
         {
             selectedBubble = nullptr;
             for(auto &bubble : vecBubbles)
@@ -119,10 +121,56 @@ public:
         {
             selectedBubble = nullptr;
         }
+    
+        if(GetMouse(olc::Mouse::RIGHT).bReleased)
+        {
+            if(selectedBubble != nullptr)
+            {
+                // apply velocity
+                selectedBubble->vx = 5.0f * ((selectedBubble->px) - (float)GetMouseX());
+                selectedBubble->vy = 5.0f * ((selectedBubble->py) - (float)GetMouseY());
+            }
+            selectedBubble = nullptr;
+        }
 
-        std::vector<std::pair<Bubble*, Bubble*>> vecCollidingPairs;
+        std::vector<std::pair<Bubble *, Bubble *>> vecCollidingPairs;
 
-        for(auto &bubble : vecBubbles) // teste every bubble
+        // Update bubbles positions
+        for (auto &bubble : vecBubbles)
+        {
+            bubble.vx += bubble.ax * fElapsedTime;
+            bubble.vy += bubble.ay * fElapsedTime;
+            bubble.px += bubble.vx * fElapsedTime;
+            bubble.py += bubble.vy * fElapsedTime;
+
+            // bubble rotate
+            if (bubble.px < 0)
+            {
+                bubble.px += (float)ScreenWidth();
+            }
+            if (bubble.px >= ScreenWidth())
+            {
+                bubble.px -= (float)ScreenWidth();
+            }
+            if (bubble.py < 0)
+            {
+                bubble.py += (float)ScreenHeight();
+            }
+            if (bubble.py >= ScreenHeight())
+            {
+                bubble.py -= (float)ScreenHeight();
+            }
+
+            if(fabs(bubble.vx * bubble.vx + bubble.vy*bubble.vy) < 0.01f) // stop is had coded
+            {
+                bubble.vx = 0;
+                bubble.vy = 0;
+            }
+        }
+
+        //  ===========================================================================================================================
+
+        for (auto &bubble : vecBubbles) // teste every bubble
         {
             for (auto &target : vecBubbles) // teste against a target bubble
             {
@@ -159,6 +207,8 @@ public:
             Bubble *b2 = c.second;
         }
 
+        // DRAW ===========================================================================================================================
+
         PixelGameEngine::ConsoleClear();
         Clear(olc::BLACK);
 
@@ -167,10 +217,17 @@ public:
         {
             DrawCircle(bubble.px, bubble.py, bubble.radius);
         }
+
         // Draw line
         for (auto c : vecCollidingPairs)
         {
             DrawLine(c.first->px, c.first->py, c.second->px, c.second->py, olc::RED);
+        }
+
+        // Draw cue
+        if(selectedBubble != nullptr)
+        {
+            DrawLine(selectedBubble->px, selectedBubble->py, GetMouseX(), GetMouseY(), olc::BLUE);
         }
 
         return true;
@@ -179,7 +236,7 @@ public:
 
 int main()
 {
-	BubblePhysics demo;
+    BubblePhysics demo;
     // Construct screen
     if (demo.Construct(160, 120, 8, 8))
     {
