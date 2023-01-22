@@ -78,12 +78,12 @@ public:
         {
             // sqrt((x1-x2)*(x2-x2) + (y1-y2)*(y1-y2) < (r1+r2))
             // fabs((x1-x2)*(x2-x2) + (y1-y2)*(y1-y2) <= (r1+r2)*(r1+r2))
-            return fabs((x1 - x2) * (x2 - x2) + (y1 - y2) * (y1 - y2) <= (r1 + r2) * (r1 + r2));
+            return fabs((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2)) <= (r1 + r2) * (r1 + r2);
         };
 
         auto isPointInBubble = [](float x1, float y1, float r1, float px, float py)
         {
-            return fabs((x1 - px)*(x1 -px) + (y1 -py)*(y1-py)) < (r1 * r1);
+            return fabs((x1 - px) * (x1 - px)) + ((y1 - py) * (y1 - py)) < (r1 * r1);
         };
 
         // interect with the bubbles using mouse
@@ -124,7 +124,17 @@ public:
                     if (doBubblesOverlap(bubble.px, bubble.py, bubble.radius, target.px, target.py, target.radius))
                     {
                         // distance between bubble centers
+                        float distance = sqrtf((bubble.px - target.px) * (bubble.px - target.px) + (bubble.py - target.py) * (bubble.py - target.py));
 
+                        float overlap = 0.5f * (distance - bubble.radius - target.radius);
+
+                        // displace current ball
+                        bubble.px -= overlap * (bubble.px - target.px) / distance;
+                        bubble.py -= overlap * (bubble.py - target.py) / distance;
+
+                        // displace target ball
+                        target.px += overlap * (bubble.px - target.px) / distance;
+                        target.py += overlap * (bubble.py - target.py) / distance;
                     }
                 }
             }
