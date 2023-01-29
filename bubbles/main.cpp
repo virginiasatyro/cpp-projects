@@ -138,6 +138,8 @@ public:
         // Update bubbles positions
         for (auto &bubble : vecBubbles)
         {
+            bubble.ax = -bubble.vx * 0.8f;
+            bubble.ay = -bubble.vy * 0.8f;
             bubble.vx += bubble.ax * fElapsedTime;
             bubble.vy += bubble.ay * fElapsedTime;
             bubble.px += bubble.vx * fElapsedTime;
@@ -231,7 +233,7 @@ public:
         }
 
         return true;
-    }
+    } // end OnUserUpdate()
 };
 
 int main()
