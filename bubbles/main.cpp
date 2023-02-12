@@ -3,7 +3,7 @@
 
 #include <vector>
 
-// g++ -o main main.cpp -lX11 -lGL -lpthread -lpng -lstdc++fs -std=c++17
+// g++ -o main.exe main.cpp -luser32 -lgdi32 -lopengl32 -lgdiplus -lShlwapi -ldwmapi -lstdc++fs -static -std=c++17
 
 constexpr float pi = 3.14159f;
 
@@ -16,6 +16,7 @@ struct Bubble
     float ax;
     float ay; // acceleration
     float radius;
+    float mass;
 
     int id;
 };
@@ -44,6 +45,7 @@ private:
         c.ax = 0;
         c.ay = 0;
         c.radius = r;
+        c.mass = r * 10.0f;
 
         c.id = vecBubbles.size();
         vecBubbles.emplace_back(c);
@@ -70,7 +72,8 @@ public:
         // adding 10 bubbles in randon locations
         for (int i = 0; i < 10; i++)
         {
-            addBubble(rand() % ScreenWidth(), rand() % ScreenHeight(), defaultRadius); // not really randon
+            //addBubble(rand() % ScreenWidth(), rand() % ScreenHeight(), defaultRadius); // not really randon
+            addBubble(rand() % ScreenWidth(), rand() % ScreenHeight(), rand() % 16 + 2);
         }
 
         return true;
@@ -207,6 +210,46 @@ public:
             // the vector contain only the colliding objects
             Bubble *b1 = c.first;
             Bubble *b2 = c.second;
+
+            // distance between bubbles
+            float distance = sqrtf((b1->px - b2->px)*(b1->px - b2->px) + (b1->py - b2->py)*(b1->py - b2->py));
+
+            // normal
+            float nx = (b2->px - b1->px) / distance;
+            float ny = (b2->py - b1->py) / distance;
+
+            // tangent (-al response)
+            float tx = -ny;
+            float ty = nx;
+
+            // dot product tangent
+            float dpTan1 = b1->vx * tx + b1->vy * ty;
+            float dpTan2 = b2->vx * tx + b2->vy * ty;
+
+            // dot product normal
+            float dpNorm1 = b1->vx * nx + b1->vy * ny;
+            float dpNorm2 = b2->vx * nx + b2->vy * ny;
+
+            // conservation of momentum in 1D
+            float m1 = (dpNorm1 * (b1->mass - b2->mass) + 2.0f * b2->mass * dpNorm2) / (b1->mass + b2->mass);
+            float m2 = (dpNorm2 * (b2->mass - b1->mass) + 2.0f * b1->mass * dpNorm1) / (b1->mass + b2->mass);
+
+            // tangental response + normal response
+            b1->vx = tx * dpTan1 + nx * m1;
+            b1->vy = ty * dpTan1 + ny * m1;
+            b2->vx = tx * dpTan2 + nx * m2;
+            b2->vy = ty * dpTan2 + ny * m2;
+
+            
+            /*// wikipedia version
+            float kx = (b1->vx - b2->vx);
+            float ky = (b1->vy - b2->vy);
+            float p = 2.0 * (nx * kx + ny * ky) / (b1->mass + b2->mass);
+            b1->vx = b1->vx - p * b2->mass * nx;
+            b1->vy = b1->vy - p * b2->mass * ny;
+            b2->vx = b2->vx - p * b1->mass * nx;
+            b2->vy = b2->vx - p * b1->mass * ny;
+            */
         }
 
         // DRAW ===========================================================================================================================
@@ -233,7 +276,7 @@ public:
         }
 
         return true;
-    } // end OnUserUpdate()
+    } // OnUserUpdate()
 };
 
 int main()
