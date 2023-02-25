@@ -20,10 +20,12 @@ private:
     };
 
     std::list<Streamer> listStreamers;
-    int maxStreamers = 1;
+    int maxStreamers = 200;
 
     void prepareStreamer(Streamer *s)
     {
+        s->column = rand() % ScreenWidth();
+        s->position = 0.0f;
         s->text = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     }
 
@@ -55,7 +57,12 @@ protected:
             for (int i = 0; i < s.text.size(); i++)
             {
                 int charIndex = (i - (int)s.position) % s.text.size();
-                DrawString(s.column, 8 * ((int)s.position - i), std::string(1, s.text[charIndex]), olc::GREEN);
+                DrawString(s.column, 8 * ((int)s.position - i), std::string(1, s.text[charIndex]), olc::GREEN); // why 8*??
+            }
+
+            if(8 * (s.position - s.text.size()) >= ScreenHeight()) // why 8*??
+            {
+                prepareStreamer(&s);
             }
         }
 
@@ -67,7 +74,8 @@ int main()
 {
     MatrixRain demo;
     // if (demo.Construct(120, 80, 12, 12)) // 12, 12
-    if (demo.Construct(1024, 512, 1, 1))
+    //if (demo.Construct(1024, 512, 1, 1))
+    if (demo.Construct(1000, 600, 1, 1))
     {
         demo.Start();
     }
