@@ -16,6 +16,7 @@ private:
     {
         int column = 0;
         float position = 0.0f;
+        float speed = 10.0f;
         std::string text;
     };
 
@@ -26,6 +27,7 @@ private:
     {
         s->column = rand() % ScreenWidth();
         s->position = 0.0f;
+        s->speed = rand() % 40 + 5;
         s->text = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     }
 
@@ -53,7 +55,7 @@ protected:
         // Draw characters
         for (auto &s : listStreamers)
         {
-            s.position += 10.0f * fElapsedTime;
+            s.position += s.speed* fElapsedTime;
             for (int i = 0; i < s.text.size(); i++)
             {
                 int charIndex = (i - (int)s.position) % s.text.size();
@@ -74,7 +76,7 @@ int main()
 {
     MatrixRain demo;
     // if (demo.Construct(120, 80, 12, 12)) // 12, 12
-    //if (demo.Construct(1024, 512, 1, 1))
+    // if (demo.Construct(1024, 512, 1, 1))
     if (demo.Construct(1000, 600, 1, 1))
     {
         demo.Start();
