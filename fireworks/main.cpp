@@ -3,6 +3,8 @@
 
 // g++ -o main.exe main.cpp -luser32 -lgdi32 -lopengl32 -lgdiplus -lShlwapi -ldwmapi -lstdc++fs -static -std=c++17
 
+constexpr float PI = 3.14159f;
+
 class Fireworks : public olc::PixelGameEngine
 {
 public:
@@ -29,22 +31,87 @@ private:
         {
             x = position;
             y = ground;
+            vx = randomFloat(100.0f) - 50.0f;
             vy = -100.0f;
-            vx = 0.0f;
+            fuse = randomFloat(2.0f) + 1.0f; // 1 - 3
+            particlesCount = size;
         }
 
         void update(float fElapsedTime)
         {
-            float gravity = 10.0f;
+            float gravity = 25.0f;
+            float drag = 0.999;
+            
+            lifeTime += fElapsedTime; // fElapsedTime = time per frame
 
-            x += vx * fElapsedTime;
-            y += (vy + gravity) * fElapsedTime;
+            if (lifeTime <= fuse)
+            {
+                // Launching time
+                vx *= drag;
+                x += vx * fElapsedTime;
+                y += (vy + gravity) * fElapsedTime;
+            }
+            else
+            {
+                // Explode
+                if (!exploded)
+                {
+                    exploded = true;
+                    for (int i = 0; i < particlesCount; i++)
+                    {
+                        Particle p;
+                        p.x = x;
+                        p.y = y;
+                        float angle = randomFloat(2.0f * PI);
+                        float power = randomFloat(75.0f); 
+                        p.fuse = randomFloat(4.0f) + 1.0f; // 1 - 5
+                        p.vx = cosf(angle) * power;
+                        p.vy = sinf(angle) * power;
+
+                        vecParticles.push_back(p);
+                    }
+                }
+                else
+                {
+                    for (auto &p : vecParticles)
+                    {
+                        p.lifeTime += fElapsedTime;
+                        p.vx *= drag;
+                        p.x += p.vx * fElapsedTime;
+                        p.y += (p.vy + gravity) * fElapsedTime;
+                    }
+                }
+            }
+        }
+
+        float randomFloat(float max)
+        {
+            return ((float)rand() / (float)RAND_MAX) * max;
         }
 
         void drawSelf(olc::PixelGameEngine *gfx)
         {
-            gfx->Draw(x, y, olc::WHITE);
+            if (lifeTime <= fuse)
+            {
+                // Launching time
+                gfx->Draw(x, y, olc::WHITE);
+            }
+            else
+            {
+                // Explode
+                for (auto &p : vecParticles)
+                {
+                    if(p.lifeTime <= p.fuse)
+                    {
+                        gfx->Draw(p.x, p.y, olc::WHITE);
+                    }
+                }
+            }
         }
+
+        std::vector<Particle> vecParticles;
+        int particlesCount = 0;
+        bool exploded = false;
     };
 
     std::list<Firework> listFireworks;
