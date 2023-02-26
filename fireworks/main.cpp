@@ -22,6 +22,8 @@ private:
         float vy = 0.0f;
         float fuse = 0.0f;
         float lifeTime = 0.0f;
+        olc::Pixel color = olc::WHITE;
+        // Pixel(uint8_t red, uint8_t green, uint8_t blue,
     };
 
     class Firework : public Particle
@@ -41,7 +43,6 @@ private:
         {
             float gravity = 25.0f;
             float drag = 0.999;
-            
             lifeTime += fElapsedTime; // fElapsedTime = time per frame
 
             if (lifeTime <= fuse)
@@ -57,6 +58,7 @@ private:
                 if (!exploded)
                 {
                     exploded = true;
+                    olc::Pixel particleColor = olc::Pixel(rand() % 255, rand() % 255, rand() % 255);
                     for (int i = 0; i < particlesCount; i++)
                     {
                         Particle p;
@@ -67,6 +69,7 @@ private:
                         p.fuse = randomFloat(4.0f) + 1.0f; // 1 - 5
                         p.vx = cosf(angle) * power;
                         p.vy = sinf(angle) * power;
+                        p.color = particleColor;
 
                         vecParticles.push_back(p);
                     }
@@ -99,11 +102,13 @@ private:
             else
             {
                 // Explode
+                expired = true;
                 for (auto &p : vecParticles)
                 {
                     if(p.lifeTime <= p.fuse)
                     {
-                        gfx->Draw(p.x, p.y, olc::WHITE);
+                        expired = false;
+                        gfx->Draw(p.x, p.y, p.color);
                     }
                 }
             }
@@ -112,9 +117,11 @@ private:
         std::vector<Particle> vecParticles;
         int particlesCount = 0;
         bool exploded = false;
+        bool expired = false;
     };
 
     std::list<Firework> listFireworks;
+    float delay = 1.0f;
 
 protected:
     bool OnUserCreate() override
@@ -134,7 +141,14 @@ protected:
 
         if (GetMouse(olc::Mouse::LEFT).bReleased)
         {
-            listFireworks.push_back({128.0f, (float)ScreenHeight(), 100});
+            // listFireworks.push_back({128.0f, (float)ScreenHeight(), 100});
+        }
+
+        delay -= fElapsedTime;
+        if (delay <= 0.0f)
+        {
+            delay = ((float)rand() / (float)RAND_MAX) * 2.0f + 0.1f;
+            listFireworks.push_back({128.0f, (float)ScreenHeight(), rand() % 800 + 100});
         }
 
         for(auto &f : listFireworks)
@@ -142,6 +156,9 @@ protected:
             f.update(fElapsedTime);
             f.drawSelf(this);
         }
+
+        listFireworks.remove_if([](const Firework &f)
+                                { return f.expired; });
 
         return true;
     }
