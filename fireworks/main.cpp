@@ -23,7 +23,6 @@ private:
         float fuse = 0.0f;
         float lifeTime = 0.0f;
         olc::Pixel color = olc::WHITE;
-        // Pixel(uint8_t red, uint8_t green, uint8_t blue,
     };
 
     class Firework : public Particle
@@ -41,7 +40,7 @@ private:
 
         void update(float fElapsedTime)
         {
-            float gravity = 25.0f;
+            float gravity = 35.0f;
             float drag = 0.999;
             lifeTime += fElapsedTime; // fElapsedTime = time per frame
 
@@ -108,7 +107,7 @@ private:
                     if(p.lifeTime <= p.fuse)
                     {
                         expired = false;
-                        gfx->Draw(p.x, p.y, p.color);
+                        gfx->Draw(p.x, p.y, p.color * ((p.lifeTime >= p.fuse * 0.75f) ? 0.5f : 1.0f));
                     }
                 }
             }
@@ -127,7 +126,6 @@ protected:
     bool OnUserCreate() override
     {
         // Called once at the start, so create things here
-
 
         return true;
     }
