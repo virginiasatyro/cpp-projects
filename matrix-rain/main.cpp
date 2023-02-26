@@ -14,7 +14,7 @@ public:
 private:
     struct Streamer
     {
-        int column = 0;
+        int column = 0; // colunms are overlapping!
         float position = 0.0f;
         float speed = 10.0f;
         std::string text;
@@ -25,7 +25,7 @@ private:
 
     void prepareStreamer(Streamer *s)
     {
-        s->column = rand() % ScreenWidth();
+        s->column = (int)(rand() % ScreenWidth());
         s->position = 0.0f;
         s->speed = rand() % 40 + 5;
         s->text = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -55,14 +55,16 @@ protected:
         // Draw characters
         for (auto &s : listStreamers)
         {
-            s.position += s.speed* fElapsedTime;
+            s.position += s.speed * fElapsedTime;
+
             for (int i = 0; i < s.text.size(); i++)
             {
-                int charIndex = (i - (int)s.position) % s.text.size();
-                DrawString(s.column, 8 * ((int)s.position - i), std::string(1, s.text[charIndex]), olc::GREEN); // why 8*??
+                auto color = s.speed < 15.0f ? olc::DARK_GREEN : olc::GREEN;
+                int charIndex = (abs(i - (int)s.position)) % s.text.size();
+                DrawString(s.column, 8 * ((int)s.position - i), std::string(1, s.text[charIndex]), color); // why 8*??
             }
 
-            if(8 * (s.position - s.text.size()) >= ScreenHeight()) // why 8*??
+            if (8 * (s.position - s.text.size()) >= ScreenHeight()) // why 8*??
             {
                 prepareStreamer(&s);
             }
