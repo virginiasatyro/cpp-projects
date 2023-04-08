@@ -121,8 +121,8 @@ public:
         }
 
         // hack? about atd::map
-        olc::vi2d cell = {0, 0};
-        for (auto& m : items)
+        /*olc::vi2d cell = {0, 0};
+        for (auto &m : items)
         {
             // Patch location (including border offset and padding)
             patchPos.x = cell.x * (cellSize.x + cellPadding.x) + 1;
@@ -135,7 +135,68 @@ public:
             pge.DrawString(screenLocation, m.getName(), olc::YELLOW);
 
             cell.y++;
+        }*/
+
+        // Draw Panel Contents
+        olc::vi2d cell = {0, 0};
+        patchPos = {1, 1};
+
+        // Work out visible items
+        int32_t topLeftItem = topVisibleRow * cellTable.x;
+        int32_t bottomRightItem = cellTable.y * cellTable.x + topLeftItem;
+
+        // Clamp to size of shild item vector
+        bottomRightItem = std::min(int32_t(items.size()), bottomRightItem);
+        int32_t visibleItems = bottomRightItem - topLeftItem;
+
+        // Draw Scroll Markers (if required)
+        if (topVisibleRow > 0)
+        {
+            patchPos = {sizeInPatches.x - 2, 0};
+            olc::vi2d vScreenLocation = patchPos * patch + screenOffset;
+            olc::vi2d vSourcePatch = {3, 0};
+            pge.DrawPartialSprite(vScreenLocation, sprGFX, vSourcePatch * patch, patchSize);
         }
+
+        if ((totalRows - topVisibleRow) > cellTable.y)
+        {
+            patchPos = {sizeInPatches.x - 2, sizeInPatches.y - 1};
+            olc::vi2d vScreenLocation = patchPos * patch + screenOffset;
+            olc::vi2d vSourcePatch = {3, 2};
+            pge.DrawPartialSprite(vScreenLocation, sprGFX, vSourcePatch * patch, patchSize);
+        }
+
+        // Draw visible items
+        for (int32_t i = 0; i < visibleItems; i++)
+        {
+            // Cell location
+            cell.x = i % cellTable.x;
+            cell.y = i / cellTable.x;
+
+            // Patch location (including border offset and padding)
+            patchPos.x = cell.x * (cellSize.x + cellPadding.x) + 1;
+            patchPos.y = cell.y * (cellSize.y + cellPadding.y) + 1;
+
+            // Actual screen location in pixels
+            olc::vi2d screenLocation = patchPos * patch + screenOffset;
+
+            // Display Item Header
+            pge.DrawString(screenLocation, items[topLeftItem + i].name, items[topLeftItem + i].enabled ? olc::WHITE : olc::DARK_GREY);
+
+            if (items[topLeftItem + i].hasChildren())
+            {
+                // Display Indicator that panel has a sub panel
+                patchPos.x = cell.x * (cellSize.x + cellPadding.x) + 1 + cellSize.x;
+                patchPos.y = cell.y * (cellSize.y + cellPadding.y) + 1;
+                olc::vi2d vSourcePatch = {3, 1};
+                screenLocation = patchPos * patch + screenOffset;
+                pge.DrawPartialSprite(screenLocation, sprGFX, vSourcePatch * patch, patchSize);
+            }
+        }
+
+        // Calculate cursor position in screen space in case system draws it
+		// cursorPos.x = (cellCursor.x * (cellSize.x + cellPadding.x)) * patch + screenOffset.x - patch;
+		// cursorPos.y = ((cellCursor.y - topVisibleRow) * (cellSize.y + cellPadding.y)) * patch + screenOffset.y + patch;
 
         pge.SetPixelMode(currentPixelMode);
     }
@@ -146,7 +207,7 @@ public:
         // to indicate cell sizes if this object contains more than one item
         for (auto &m : items)
         {
-            if(m.hasChildren())
+            if (m.hasChildren())
             {
                 m.build();
             }
@@ -183,7 +244,6 @@ protected:
     std::vector<MenuObject> items;
 }; // end of class MenuObject
 
-
 class RetroPopUpMenu : public olc::PixelGameEngine
 {
 public:
@@ -202,12 +262,22 @@ public:
         // Called once at the start, so create things here
         sprGFX = new olc::Sprite("img/RetroMenu.png");
 
-        mO["main"].setTable(1, 10);
+        mO["main"].setTable(3, 3);
         mO["main"]["Attack"].setId(101);
         mO["main"]["Magic"].setId(102);
         mO["main"]["Defend"].setId(103);
         mO["main"]["Items"].setId(104);
         mO["main"]["Escape"].setId(105);
+        mO["main"]["Dummy1"].setId(105);
+        mO["main"]["Dummy2"].setId(105);
+        mO["main"]["Dummy3"].setId(105);
+        mO["main"]["Dummy4"].setId(105);
+        mO["main"]["Dummy5"].setId(105);
+        mO["main"]["Dummy6"].setId(105);
+        mO["main"]["Dummy7"].setId(105);
+        mO["main"]["Dummy8"].setId(105);
+        mO["main"]["Dummy9"].setId(105);
+
         mO.build();
 
         return true;
@@ -219,8 +289,8 @@ public:
         // MenuObject mO;
 
         // we can created this linked because each set functions returns a pointer to itself
-        //mO["Magic"]["Black"]["Fire"].setId(101).setEnabled(false).setTable(2, 4);
-        //mO["Magic"]["Black"]["Ice"].setId(101).setEnabled(false).setTable(2, 4);
+        // mO["Magic"]["Black"]["Fire"].setId(101).setEnabled(false).setTable(2, 4);
+        // mO["Magic"]["Black"]["Ice"].setId(101).setEnabled(false).setTable(2, 4);
 
         Clear(olc::BLACK);
 
