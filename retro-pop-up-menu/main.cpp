@@ -67,7 +67,14 @@ public:
 
     MenuObject &operator[](const std::string &name)
     {
-        return items[name];
+        if (itemPointer.count(name) == 0)
+        {
+            // create the item and link the name with the current index of the vector
+            itemPointer[name] = items.size();
+            items.push_back(MenuObject(name));
+        }
+
+        return items[itemPointer[name]];
     }
 
     // MenuObject is external to the PixelGameEngine
@@ -125,7 +132,7 @@ public:
             olc::vi2d screenLocation = patchPos * patch + screenOffset;
 
             // Display item header
-            pge.DrawString(screenLocation, m.first, olc::YELLOW);
+            pge.DrawString(screenLocation, m.getName(), olc::YELLOW);
 
             cell.y++;
         }
@@ -139,14 +146,14 @@ public:
         // to indicate cell sizes if this object contains more than one item
         for (auto &m : items)
         {
-            if(m.second.hasChildren())
+            if(m.hasChildren())
             {
-                m.second.build();
+                m.build();
             }
 
             // longest child name determines cell width
-            cellSize.x = std::max(m.second.getSize().x, cellSize.x);
-            cellSize.y = std::max(m.second.getSize().y, cellSize.y);
+            cellSize.x = std::max(m.getSize().x, cellSize.x);
+            cellSize.y = std::max(m.getSize().y, cellSize.y);
         }
 
         // adjust size of this object (in patches) if it were rendered as a panel
@@ -172,7 +179,8 @@ protected:
     const olc::vi2d patchSize = {patch, patch};
     olc::vi2d sizeInPatches = {0, 0};
 
-    std::map<std::string, MenuObject> items;
+    std::unordered_map<std::string, size_t> itemPointer; // do not force order to be alphabetical
+    std::vector<MenuObject> items;
 }; // end of class MenuObject
 
 
