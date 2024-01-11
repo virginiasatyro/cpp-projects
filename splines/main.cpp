@@ -33,13 +33,25 @@ struct Spline
 {
     std::vector<point2D> points;
 
-    point2D getSplinePoint(float t)
+    point2D getSplinePoint(float t, bool looped = false)
     {
         int p0, p1, p2, p3;
-        p1 = (int)t + 1;
-        p2 = p1 + 1;
-        p3 = p2 + 1;
-        p0 = p1 - 1;
+        if (!looped)
+        {
+            p1 = (int)t + 1;
+            p2 = p1 + 1;
+            p3 = p2 + 1;
+            p0 = p1 - 1;
+        }
+        else
+        {
+            p1 = (int)t;
+            p2 = (p1 + 1) % points.size();
+            p3 = (p2 + 1) % points.size();
+            p0 = p1 >= 1 ? p1 - 1 : points.size() - 1;
+        }
+
+        t = t - (int)t;
 
         float tt = t * t;
         float ttt = tt * t;
@@ -63,6 +75,7 @@ public:
     {
         sAppName = "Splines";
     }
+
 private:
     Spline path;
     int selectedPoint = 0;
@@ -70,8 +83,9 @@ private:
 protected:
     virtual bool OnUserCreate() override
     {
-        path.points = {{10, 41}, {40, 41}, {70, 41}, {100, 41}};
-
+        //path.points = {{10, 41}, {40, 41}, {70, 41}, {100, 41}};
+        path.points = { { 10, 41 },{ 20, 41 },{ 30, 41 },{ 40, 41 },{ 50, 41 },{ 60, 41 },{ 70, 41 },{ 80, 41 },{ 90, 41 },{ 100, 41 } };
+        
         return true;
     }
 
@@ -121,13 +135,12 @@ protected:
             path.points[selectedPoint].y += 30.0 * fElapsedTime;
         }
 
-
-
         // DRAW --------------------------------------------------------------------------------------------------------
         // Draw spline
-        for(float t = 0.0; t < 1.0; t += 0.05)
+        // for(float t = 0.0; t < 1.0; t += 0.01)
+        for(float t = 0.0; t < (float)path.points.size(); t += 0.005)
         {
-            point2D pos = path.getSplinePoint(t);
+            point2D pos = path.getSplinePoint(t, true);
             Draw(pos.x, pos.y);
         }
         
