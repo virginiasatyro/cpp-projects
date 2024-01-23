@@ -25,6 +25,8 @@ public:
 
 private:
     int matrix[SCREEN_W][SCREEN_H];
+    int matrixAux[SCREEN_W][SCREEN_H];
+    float delay = 0.0;
 
 protected:
     virtual bool OnUserCreate() override
@@ -34,6 +36,7 @@ protected:
             for (int j = 0; j < SCREEN_H; j++)
             {
                 matrix[i][j] = 0;
+                matrixAux[i][j] = 0;
             }
         }
 
@@ -47,10 +50,12 @@ protected:
         PixelGameEngine::ConsoleClear();
         Clear(olc::BLACK);
 
+        delay += fElapsedTime;
+
         // INPUT --------------------------------------------------------------------------------
         if (GetMouse(olc::Mouse::LEFT).bHeld)
         {
-            matrix[(int)GetMouseX()][(int)GetMouseY()] = 1;
+            matrix[GetMouseX()][GetMouseY()] = 1;
         }
 
         // DRAW ---------------------------------------------------------------------------------
@@ -61,10 +66,40 @@ protected:
                 if (matrix[i][j] == 1)
                 {
                     Draw(i, j);
+                    matrixAux[i][j] = 1;
                 }
             }
         }
 
+        if(delay <= 0.3)
+        {
+            return true;
+        }
+
+        // ALGORITHM ---------------------------------------------------------------------------------
+        std::cout << "CALL ALGORITH delay " << delay << std::endl;
+        for (int i = 0; i < SCREEN_W; i++)
+        {
+            for (int j = 0; j < SCREEN_H; j++)
+            {
+                if (matrixAux[i][j] == 1)
+                {
+                    // found a particle
+                    // check the send bellow
+                    if (j + 1 > SCREEN_H)
+                    {
+
+                    }
+                    else if (matrixAux[i][j + 1] == 0)
+                    {
+                        matrix[i][j] = 0;
+                        matrix[i][j + 1] = 1;
+                    }
+                }
+            }
+        }
+
+        delay = 0;
         return true;
     }
 };
