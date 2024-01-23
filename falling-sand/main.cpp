@@ -4,6 +4,11 @@
     - based on: https://www.youtube.com/watch?v=0jjeOYMjmDU - The Coding Train
 
     - run: g++ -o main.exe main.cpp -luser32 -lgdi32 -lopengl32 -lgdiplus -lShlwapi -ldwmapi -lstdc++fs -static -std=c++17
+
+    - TODO:
+
+        - change the matrix - 2d array - to something more C++
+        - add color - the color need to be related to the pixel
 */
 
 #include <vector>
@@ -27,6 +32,25 @@ private:
     int matrix[SCREEN_W][SCREEN_H];
     int matrixAux[SCREEN_W][SCREEN_H];
     float delay = 0.0;
+
+    olc::Pixel color(float t)
+    {
+        std::srand((int)(t * 1000));
+        int randomNum = std::rand() % 3 + 1;
+
+        if (randomNum == 1)
+        {
+            return olc::YELLOW;
+        }
+        else if (randomNum == 2)
+        {
+            return olc::DARK_YELLOW;
+        }
+        else
+        {
+            return olc::VERY_DARK_YELLOW;
+        }
+    }
 
 protected:
     virtual bool OnUserCreate() override
@@ -71,7 +95,7 @@ protected:
             }
         }
 
-        if(delay <= 0.05)
+        if (delay <= 0.05)
         {
             return true;
         }
@@ -82,18 +106,50 @@ protected:
         {
             for (int j = 0; j < SCREEN_H; j++)
             {
+                // found a particle
                 if (matrixAux[i][j] == 1)
                 {
-                    // found a particle
+                    std::srand((int)(fElapsedTime * 1000));
+                    int rightOrLeft = std::rand() % 2 + 1;
+                    bool canGoRight = matrix[i + 1][j + 1] == 0 && (i + 1 < SCREEN_W - 1);
+                    bool canGoLeft = matrix[i - 1][j + 1] == 0 && (i - 1 >= 0);
+
                     // check the send bellow
                     if (j + 1 > SCREEN_H - 1)
                     {
-
+                        // got to the bottom
                     }
+                    // check the below
                     else if (matrixAux[i][j + 1] == 0)
                     {
                         matrix[i][j] = 0;
                         matrix[i][j + 1] = 1;
+                    }
+                    // check if can go both sides
+                    else if (canGoRight && canGoLeft)
+                    {
+                        if (rightOrLeft == 1)
+                        {
+                            matrix[i][j] = 0;
+                            matrix[i + 1][j + 1] = 1;
+                        }
+                        else
+                        {
+                            matrix[i][j] = 0;
+                            matrix[i - 1][j + 1] = 1;
+                        }
+                    }
+                    // check below and right
+                    else if (canGoRight)
+                    {
+                        matrix[i][j] = 0;
+                        matrix[i + 1][j + 1] = 1;
+                    }
+                    // check below and left
+                    else if (canGoLeft)
+                    {
+                        matrix[i][j] = 0;
+                        matrix[i - 1][j + 1] = 1;
                     }
                 }
             }
