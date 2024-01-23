@@ -53,7 +53,7 @@ protected:
         delay += fElapsedTime;
 
         // INPUT --------------------------------------------------------------------------------
-        if (GetMouse(olc::Mouse::LEFT).bHeld)
+        if (GetMouse(olc::Mouse::LEFT).bReleased)
         {
             matrix[GetMouseX()][GetMouseY()] = 1;
         }
@@ -63,15 +63,15 @@ protected:
         {
             for (int j = 0; j < SCREEN_H; j++)
             {
+                matrixAux[i][j] = matrix[i][j];
                 if (matrix[i][j] == 1)
                 {
                     Draw(i, j);
-                    matrixAux[i][j] = 1;
                 }
             }
         }
 
-        if(delay <= 0.3)
+        if(delay <= 0.05)
         {
             return true;
         }
@@ -86,7 +86,7 @@ protected:
                 {
                     // found a particle
                     // check the send bellow
-                    if (j + 1 > SCREEN_H)
+                    if (j + 1 > SCREEN_H - 1)
                     {
 
                     }
