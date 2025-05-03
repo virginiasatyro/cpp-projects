@@ -226,6 +226,11 @@ public:
         totalRows = (items.size() / cellTable.x) + (((items.size() % cellTable.x) > 0) ? 1 : 0);
     }
 
+    void onUp()
+    {
+        
+    }
+
 protected:
     std::string name;
     bool enabled = true;
@@ -242,7 +247,93 @@ protected:
 
     std::unordered_map<std::string, size_t> itemPointer; // do not force order to be alphabetical
     std::vector<MenuObject> items;
+
+    olc::vi2d cellCursor ={ 0, 0};
+    int32_t cursorItem = 0;
+    olc::vi2d cursorPos = {0, 0};
 }; // end of class MenuObject
+
+class MenuManager
+{
+public:
+    MenuManager() {}
+
+    void open(MenuObject* mo)
+    {
+        close();
+        panels.push_back(mo);
+    }
+
+    void close()
+    {
+        // clear the stack
+        panels.clear();
+    }
+
+    void onUp()
+    {
+        if (!panels.empty())
+        {
+            panels.back()->onUp();
+        }
+    }
+
+    void onDown()
+    {
+        if (!panels.empty())
+        {
+            panels.back()->onDown();
+        }
+    }
+
+    void onLeft()
+    {
+        if (!panels.empty())
+        {
+            panels.back()->onLeft();
+        }
+    }
+
+    void onRight()
+    {
+        if (!panels.empty())
+        {
+            panels.back()->onRight();
+        }
+    }
+
+    void onBack()
+    {
+        if (!panels.empty())
+        {
+            panels.pop_back();
+        }
+    }
+
+    MenuObject* onConfirm()
+    {
+
+    }
+
+    void draw(olc::PixelGameEngine& pge, olc::Sprite* sprGFX, olc::vi2d screenOffset)
+    {
+        if (panels.empty())
+        {
+            return;
+        }
+
+        // Draw visible menu system
+        for (auto& p : panels)
+        {
+            p->drawSelf(pge, sprGFX, screenOffset);
+            screenOffset += {10, 10};
+        }
+    }
+
+private:
+    // list of panels (used like a stack)
+    std::list<MenuObject *> panels;
+};
 
 class RetroPopUpMenu : public olc::PixelGameEngine
 {
