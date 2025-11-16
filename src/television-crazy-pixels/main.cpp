@@ -35,9 +35,9 @@ int main()
 {
   Example demo;
   // construct screen
-  if
+  if (demo.Construct(256, 240, 4, 4))
   {
-    (demo.Construct(256, 240, 4, 4)) demo.Start();
+    demo.Start();
   }
 
   return 0;
