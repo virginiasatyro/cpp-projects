@@ -2,7 +2,7 @@
 
 Este diretório contém uma implementação em C++ de um gerador de labirintos "perfeito" usando uma variação do algoritmo Randomized Prim (também conhecido como algoritmo de fronteira). O projeto usa a biblioteca `olcPixelGameEngine` (arquivo `../commonlib/olcPixelGameEngine.h`) para renderizar o labirinto em uma janela gráfica simples.
 
-![Maze Generator Animation](../img/maze-creator-random-prim.gif)
+![Maze Generator Animation](../../img/maze-creator-random-prim.gif)
 
 ## Visão geral
 

@@ -2,7 +2,7 @@
 
 Uma visualização animada de geração de labirintos usando o algoritmo de **Recursive Backtracking** (Backtracking Recursivo).
 
-![Maze Generator Animation](../img/maze-creator.gif)
+![Maze Generator Animation](../../img/maze-creator.gif)
 
 ## 📋 Visão Geral
 
