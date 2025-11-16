@@ -39,7 +39,7 @@
 #include <vector>
 
 #define OLC_PGE_APPLICATION
-#include "../commonlib/olcPixelGameEngine.h"
+#include "../../commonlib/olcPixelGameEngine.h"
 
 class Mazes : public olc::PixelGameEngine
 {
