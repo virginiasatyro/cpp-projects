@@ -18,6 +18,12 @@ This implementation uses the randomized Prim (frontier) method: it begins from a
 
 ![Maze Generator Animation](./img/maze-creator-random-prim.gif)
 
+## [Splines](./src/splines/)
+
+This program implements an interactive Catmull-Rom spline visualizer that allows real-time manipulation of control points to generate smooth interpolating curves; it demonstrates the mathematical foundation of cubic splines by computing both the position and gradient (tangent vector) at any parameter value along the curve, which enables practical applications like camera paths, AI navigation, and smooth animations—the code supports both open and looped spline modes, renders the curve continuously by sampling at fine intervals, and includes an animated agent (marker) that follows the path while a blue line visualizes the instantaneous direction of travel based on the spline's derivative.
+
+![Splines](./img/splines.gif)
+
 ## [Television Crazy Pixels](./src/television-crazy-pixels/)
 
 This program generates a TV static effect by continuously iterating through every pixel on the screen (256×240 resolution) each frame and drawing each one with a randomly generated RGB color value; since this happens at high speed (~60 FPS), the result is a flickering, colorful noise pattern that mimics old television snow, demonstrating fundamental concepts like the game loop architecture, direct pixel manipulation, real-time rendering, and random number generation in a graphics context.
