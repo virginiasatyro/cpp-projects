@@ -322,6 +322,7 @@ Dependendo do estado inicial:
 4. **Controle de velocidade**: Variar a velocidade da simulação com teclas.
 5. **Desenho interativo**: Permitir usuário "pintar" células vivas/mortas ao clicar.
 6. **Estatísticas**: Gráficos de população ao longo do tempo.
+7. **Arduino**: Reproduzir o algoritmo no Arduino (com display).
 
 ## Conclusão
 
