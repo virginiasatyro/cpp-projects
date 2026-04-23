@@ -38,4 +38,4 @@
 
 # ignore testing folder 
 
-src/ignore/*
+ignore/*

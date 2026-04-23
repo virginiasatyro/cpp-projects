@@ -289,9 +289,35 @@ class Video : public olc::PixelGameEngine
     // as used in and MathWorks
     olc::Pixel ToGreyWeightedMethod(unsigned char r, unsigned char g, unsigned char b) const
     {
-      // Convert to grayscale using luminosity method
       const unsigned char gray = static_cast<unsigned char>(0.299f * r + 0.587f * g + 0.114f * b);
       return olc::Pixel(gray, gray, gray);
+    }
+
+    // Average Method: Average the red, green, and blue values for each pixel (R + G + B) / 3 to
+    // determine the grey intensity.
+    olc::Pixel ToGreyAverageMethod(unsigned char r, unsigned char g, unsigned char b) const
+    {
+      const unsigned char gray = static_cast<unsigned char>((r + g + b) / 3);
+      return olc::Pixel(gray, gray, gray);
+    }
+
+    // Desaturation Method: Take the average of the maximum and minimum values among the red, green,
+    // and blue channels to determine the grey intensity. This method can help preserve some
+    // contrast.
+    olc::Pixel ToGreyDesaturationMethod(unsigned char r, unsigned char g, unsigned char b) const
+    {
+      const unsigned char max = std::max({r, g, b});
+      const unsigned char min = std::min({r, g, b});
+      const unsigned char gray = static_cast<unsigned char>((max + min) / 2);
+      return olc::Pixel(gray, gray, gray);
+    }
+
+    olc::Pixel ToGreyThresholdMethod(unsigned char r, unsigned char g, unsigned char b) const
+    {
+      const unsigned char gray = (r + g + b) / 3;
+      const unsigned char threshold = 128;  // Adjust this threshold as needed
+      const unsigned char bw = (gray >= threshold) ? 255 : 0;
+      return olc::Pixel(bw, bw, bw);
     }
 
     olc::Pixel SampleFrame(int x, int y) const
@@ -314,6 +340,9 @@ class Video : public olc::PixelGameEngine
       unsigned char r = frameBuffer[offset + 2];
 
       return ToGreyWeightedMethod(r, g, b);
+      // return ToGreyAverageMethod(r, g, b);
+      // return ToGreyDesaturationMethod(r, g, b);
+      // return ToGreyThresholdMethod(r, g, b);
     }
 
   protected:

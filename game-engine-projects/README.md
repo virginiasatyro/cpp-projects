@@ -10,7 +10,7 @@ This program implements Conway’s Game of Life using the olcPixelGameEngine: it
 
 This program implements the well knwon Matrix Rain using the olcPixelGameEngine.
 
-<images src="./images/matrix-rain.gif" alt="Matrix Rain" width="40%">
+<img src="./images/matrix-rain.gif" alt="Matrix Rain" width="40%">
 
 ## [Maze Creator](./maze-creator)
 
@@ -35,3 +35,15 @@ This program implements an interactive Catmull-Rom spline visualizer that allows
 This program generates a TV static effect by continuously iterating through every pixel on the screen (256×240 resolution) each frame and drawing each one with a randomly generated RGB color value; since this happens at high speed (~60 FPS), the result is a flickering, colorful noise pattern that mimics old television snow, demonstrating fundamental concepts like the game loop architecture, direct pixel manipulation, real-time rendering, and random number generation in a graphics context.
 
 ![Television Crazy Pixels](./images/television-crazy-pixels.gif)
+
+## [Webcam to Pixels](./webcam-to-pixels/)
+
+This project captures frames from the default webcam through Windows Media Foundation, copies the raw RGB data into a frame buffer, and samples that buffer pixel-by-pixel inside `olcPixelGameEngine` to create a low-resolution, pixelated live camera view. By rendering the webcam image at `320x240` with scaled-up pixels, the program produces a simple retro-style webcam effect while demonstrating real-time frame acquisition, buffer access, coordinate remapping, and direct pixel drawing.
+
+<img src="./images/webcam-capture.png" alt="Webcam Capture" width="20%" height="20%">
+
+## [Webcam to Pixels - Black and White](./webcam-to-pixels-black-and-white/)
+
+This variation builds on the webcam-to-pixels pipeline but converts each sampled RGB pixel to grayscale before drawing it, allowing different black-and-white conversion techniques to be tested in real time. The code includes weighted luminance, simple average, desaturation, and threshold-based conversion methods, making the project a compact demonstration of how different grayscale formulas affect contrast, brightness perception, and the final visual style of a pixelated webcam feed.
+
+<img src="./images/webcam-capture-pb.png" alt="Webcam Capture - Black and White" width="20%" height="20%">

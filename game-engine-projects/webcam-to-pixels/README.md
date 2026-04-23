@@ -15,3 +15,5 @@ g++ -o main.exe main.cpp -luser32 -lgdi32 -lopengl32 -lgdiplus -lShlwapi -ldwmap
 - Windows only
 - Requires a webcam connected and available as the default camera
 - Uses a `320x240` internal resolution with pixel scaling for the visual effect
+
+![Webcam Capture](../images/webcam-capture.png)
