@@ -4,7 +4,7 @@
 
 Este projeto implementa um visualizador interativo de **Splines Catmull-Rom**, um tipo de curva matemática que passa por um conjunto de pontos de controle, criando um caminho suave e contínuo. O programa permite manipular pontos de controle em tempo real, visualizar a curva resultante, e demonstrar como calcular a **derivada (gradiente)** da spline — útil para aplicações como caminhos de IA, animações e trajetórias de objetos.
 
-![Splines](../../img/splines.gif)
+![Splines](../../images/splines.gif)
 
 ## O Que São Splines?
 

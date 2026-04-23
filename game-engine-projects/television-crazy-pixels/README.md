@@ -2,7 +2,7 @@
 
 A simple yet fun visual effect that mimics the nostalgic look of old television static or "snow" — continuously filling the screen with random colored pixels to create a chaotic, colorful animation.
 
-![Television Crazy Pixels](../../img/television-crazy-pixels.gif)
+![Television Crazy Pixels](../../images/television-crazy-pixels.gif)
 
 ## Overview
 

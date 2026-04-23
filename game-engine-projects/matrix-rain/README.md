@@ -15,7 +15,7 @@ O resultado é uma animação simples, mas boa para estudar:
 
 ## Como a animação funciona
 
-<img src="../img/matrix-rain.gif" alt="Matrix Rain" width="50%">
+<images src="../images/matrix-rain.gif" alt="Matrix Rain" width="50%">
 
 Cada "chuva" é representada por uma struct `Streamer`, que contém:
 

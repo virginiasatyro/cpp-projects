@@ -4,7 +4,7 @@
 
 Este projeto implementa o famoso **Jogo da Vida de Conway** (Conway's Game of Life), um autômato celular que simula a evolução de uma população de células em uma grade bidimensional. Apesar de suas regras simples, o Jogo da Vida demonstra emergência complexa: padrões simples evoluem para estruturas intrincadas, osciladores, naves espaciais e comportamentos caóticos, oferecendo insights sobre a vida, a complexidade e sistemas autorregulatórios.
 
-![Game of Life](../../img/game-of-life.gif)
+![Game of Life](../../images/game-of-life.gif)
 
 ## O Que É um Autômato Celular?
 

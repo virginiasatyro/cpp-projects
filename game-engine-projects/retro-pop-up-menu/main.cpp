@@ -348,7 +348,7 @@ class RetroPopUpMenu : public olc::PixelGameEngine
     bool OnUserCreate() override
     {
       // Called once at the start, so create things here
-      sprGFX = new olc::Sprite("img/RetroMenu.png");
+      sprGFX = new olc::Sprite("images/RetroMenu.png");
 
       mO["main"].setTable(3, 3);
       mO["main"]["Attack"].setId(101);
