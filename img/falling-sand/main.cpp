@@ -15,7 +15,7 @@
 #include <vector>
 
 #define OLC_PGE_APPLICATION
-#include "../../../commonlib/olcPixelGameEngine.h"
+#include "../commonlib/olcPixelGameEngine.h"
 
 #define SCREEN_W 32
 #define SCREEN_H 32

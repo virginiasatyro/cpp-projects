@@ -6,7 +6,7 @@
 #include <iostream>
 
 #define OLC_PGE_APPLICATION
-#include "../../../commonlib/olcPixelGameEngine.h"
+#include "../commonlib/olcPixelGameEngine.h"
 
 class DireWolf : public olc::PixelGameEngine
 {

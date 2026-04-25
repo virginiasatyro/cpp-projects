@@ -1,5 +1,5 @@
 #define OLC_PGE_APPLICATION
-#include "../../../commonlib/olcPixelGameEngine.h"
+#include "../commonlib/olcPixelGameEngine.h"
 
 // https://www.youtube.com/watch?v=jde1Jq5dF0E&list=PLrOv9FMX8xJEEQFU_eAvYTsyudrewymNl&index=30
 // g++ -o main.exe main.cpp -luser32 -lgdi32 -lopengl32 -lgdiplus -lShlwapi -ldwmapi -lstdc++fs

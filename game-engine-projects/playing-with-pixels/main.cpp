@@ -1,5 +1,5 @@
 #define OLC_PGE_APPLICATION
-#include "../../../commonlib/olcPixelGameEngine.h"
+#include "../commonlib/olcPixelGameEngine.h"
 
 class Example : public olc::PixelGameEngine
 {
