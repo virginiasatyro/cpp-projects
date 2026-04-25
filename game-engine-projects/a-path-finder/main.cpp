@@ -3,7 +3,6 @@
 #include <iostream>
 #include <vector>
 
-
 #define OLC_PGE_APPLICATION
 #include "../commonlib/olcPixelGameEngine.h"
 
@@ -65,6 +64,12 @@ class PathFinder : public olc::PixelGameEngine
           if (y < mapHeight - 1) node.VecNeighbors.push_back(&nodes[(y + 1) * mapWidth + (x + 0)]);
           if (x > 0) node.VecNeighbors.push_back(&nodes[(y + 0) * mapWidth + (x - 1)]);
           if (x < mapWidth - 1) node.VecNeighbors.push_back(&nodes[(y + 0) * mapWidth + (x + 1)]);
+
+          // add diagonals as well
+          if (y > 0 && x > 0) node.VecNeighbors.push_back(&nodes[(y - 1) * mapWidth + (x - 1)]);
+          if (y > 0 && x < mapWidth - 1) node.VecNeighbors.push_back(&nodes[(y - 1) * mapWidth + (x + 1)]);
+          if (y < mapHeight - 1 && x > 0) node.VecNeighbors.push_back(&nodes[(y + 1) * mapWidth + (x - 1)]);
+          if (y < mapHeight - 1 && x < mapWidth - 1) node.VecNeighbors.push_back(&nodes[(y + 1) * mapWidth + (x + 1)]);
           // clang-format on
         }
       }

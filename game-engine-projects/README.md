@@ -1,5 +1,11 @@
 # C++ Game Engine Projects
 
+## [A* Path Finder](./a-path-finder/)
+
+This project implements an interactive A* pathfinding visualizer using `olcPixelGameEngine`, where a grid of nodes is searched in real time to find the shortest route from a green start node to a red goal node while avoiding white obstacles. The algorithm tracks local cost, heuristic distance, global estimated cost, visited nodes, and parent pointers, then draws the final route in yellow so you can see how the search explores the map and reconstructs the best path.
+
+<img src="./images/astar-path-finder.gif" alt="A* Path Finder" width="20%" height="20%">
+
 ## [Game of Life](./game-of-life)
 
 This program implements Conway’s Game of Life using the olcPixelGameEngine: it stores the grid as two 1D arrays (state for the current generation and output as a snapshot of the previous generation), initializes state randomly, then on each frame copies state into output, iterates over internal cells, counts the eight Moore neighbors for each cell, and applies the standard Life rules (a live cell survives with 2 or 3 neighbors, a dead cell becomes alive with exactly 3) to compute the next state; the code renders live cells in green and dead cells in black, updates all cells simultaneously via the double-buffer approach, and provides a simple pause control (SPACE) while using 1D indexing (index = y * width + x) for efficient access.
