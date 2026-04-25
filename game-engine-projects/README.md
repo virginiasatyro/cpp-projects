@@ -47,3 +47,15 @@ This project captures frames from the default webcam through Windows Media Found
 This variation builds on the webcam-to-pixels pipeline but converts each sampled RGB pixel to grayscale before drawing it, allowing different black-and-white conversion techniques to be tested in real time. The code includes weighted luminance, simple average, desaturation, and threshold-based conversion methods, making the project a compact demonstration of how different grayscale formulas affect contrast, brightness perception, and the final visual style of a pixelated webcam feed.
 
 <img src="./images/webcam-capture-pb.png" alt="Webcam Capture - Black and White" width="20%" height="20%">
+
+## [Webcam to Pixels - Dither Colors](./webcam-to-pixels-dither-colors/)
+
+This variation turns the live webcam feed into a color-dithered pixel image by converting each sampled RGB pixel into HSV, grouping the hue into strong color bands, and using a 2x2 dither pattern to represent brightness between foreground and background colors. The effect keeps the same Windows Media Foundation capture pipeline as the webcam projects, but replaces direct color drawing with a stylized retro palette made from red, yellow, green, cyan, blue, magenta, black, and white.
+
+<img src="./images/web-cam-dither-colors.png" alt="Webcam Capture - Dither Colors" width="20%" height="20%">
+
+## [Webcam to Pixels - Dither Black and White](./webcam-to-pixels-dither/)
+
+This version renders the webcam feed as a grayscale dither image by converting each sampled pixel to luminance, splitting the brightness into black, dark gray, gray, and white shade bands, and mixing those shades with a simple 2x2 pattern. Compared with a hard black-and-white threshold, the dithered output preserves more facial detail, edges, and lighting variation while still keeping the chunky low-resolution webcam style.
+
+<img src="./images/web-cam-dither.png" alt="Webcam Capture - Black and White" width="20%" height="20%">
