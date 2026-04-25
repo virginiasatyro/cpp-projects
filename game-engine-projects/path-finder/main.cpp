@@ -29,6 +29,9 @@ class PathFinder : public olc::PixelGameEngine
     int mapWidth = 16;
     int mapHeight = 16;
 
+    Node *nodeStart = nullptr;
+    Node *nodeEnd = nullptr;
+
   protected:
     bool OnUserCreate() override
     {
@@ -39,14 +42,34 @@ class PathFinder : public olc::PixelGameEngine
       {
         for (int y = 0; y < mapHeight; y++)
         {
-          nodes[y * mapWidth + x].x = x;
-          nodes[y * mapWidth + x].y = y;
-          nodes[y * mapWidth + x].obstacle =
-              false;  // (rand() % 5 == 0) randomly place some obstacles
-          nodes[y * mapWidth + x].visited = false;
-          nodes[y * mapWidth + x].parent = nullptr;
+          auto &node = nodes[y * mapWidth + x];
+          node.x = x;
+          node.y = y;
+          node.obstacle = false;
+          node.visited = false;
+          node.parent = nullptr;
         }
       }
+
+      // create connections - in this case nodes are on a regular grid
+      for (int x = 0; x < mapWidth; x++)
+      {
+        for (int y = 0; y < mapHeight; y++)
+        {
+          auto &node = nodes[y * mapWidth + x];
+          // clang-format off
+          if (y > 0) node.VecNeighbors.push_back(&nodes[(y - 1) * mapWidth + (x + 0)]);
+          if (y < mapHeight - 1) node.VecNeighbors.push_back(&nodes[(y + 1) * mapWidth + (x + 0)]);
+          if (x > 0) node.VecNeighbors.push_back(&nodes[(y + 0) * mapWidth + (x - 1)]);
+          if (x < mapWidth - 1) node.VecNeighbors.push_back(&nodes[(y + 0) * mapWidth + (x + 1)]);
+          // clang-format on
+        }
+      }
+
+      // manually position the start and end points
+      nodeStart = &nodes[(mapHeight / 2) * mapWidth + 1];
+      nodeEnd = &nodes[(mapHeight / 2) * mapWidth + (mapWidth - 2)];
+
       return true;
     }
 
@@ -74,6 +97,28 @@ class PathFinder : public olc::PixelGameEngine
       // clear screen
       Clear(olc::BLACK);
 
+      // draw connections first
+      for (int x = 0; x < mapWidth; x++)
+      {
+        for (int y = 0; y < mapHeight; y++)
+        {
+          auto &node = nodes[y * mapWidth + x];
+          int drawX = x * nodeSize + nodeSize / 2;
+          int drawY = y * nodeSize + nodeSize / 2;
+
+          for (auto neighbor : node.VecNeighbors)
+          {
+            if (neighbor->obstacle || node.obstacle)
+            {
+              continue;  // don't draw connections to or from obstacles
+            }
+
+            DrawLine(drawX, drawY, neighbor->x * nodeSize + nodeSize / 2,
+                     neighbor->y * nodeSize + nodeSize / 2, olc::GREY);
+          }
+        }
+      }
+
       // draw nodes on top
       for (int x = 0; x < mapWidth; x++)
       {
@@ -86,9 +131,18 @@ class PathFinder : public olc::PixelGameEngine
                    nodeSize - nodeBorder * 2,
                    nodes[y * mapWidth + x].obstacle ? olc::WHITE : olc::BLUE);
 
-          // FillRect(drawX + nodeBorder, drawY + nodeBorder, nodeSize - nodeBorder * 2,
-          //          nodeSize - nodeBorder * 2, olc::BLUE);
-          //  DrawRect(drawX, drawY, nodeSize, nodeSize, olc::BLACK);
+          if (&nodes[y * mapWidth + x] == nodeStart)
+          {
+            // start node
+            FillRect(drawX + nodeBorder, drawY + nodeBorder, nodeSize - nodeBorder * 2,
+                     nodeSize - nodeBorder * 2, olc::GREEN);
+          }
+          else if (&nodes[y * mapWidth + x] == nodeEnd)
+          {
+            // end node
+            FillRect(drawX + nodeBorder, drawY + nodeBorder, nodeSize - nodeBorder * 2,
+                     nodeSize - nodeBorder * 2, olc::RED);
+          }
         }
       }
 
