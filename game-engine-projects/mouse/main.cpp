@@ -1,12 +1,10 @@
-/*
-    run: g++ -o main.exe main.cpp -luser32 -lgdi32 -lopengl32 -lgdiplus -lShlwapi -ldwmapi
-   -lstdc++fs -static -std=c++17
-*/
-
 #include <iostream>
 
 #define OLC_PGE_APPLICATION
-#include "../../../commonlib/olcPixelGameEngine.h"
+#include "../commonlib/olcPixelGameEngine.h"
+
+// run: g++ -o main.exe main.cpp -luser32 -lgdi32 -lopengl32 -lgdiplus -lShlwapi -ldwmapi -lstdc++fs
+// -static -std=c++17
 
 class MouseTest : public olc::PixelGameEngine
 {
@@ -30,7 +28,7 @@ class MouseTest : public olc::PixelGameEngine
     bool OnUserUpdate(float fElapsedTime) override
     {
       // Clear screen
-      PixelGameEngine::ConsoleClear();
+      // PixelGameEngine::ConsoleClear();
       Clear(olc::BLACK);
 
       // DRAW
