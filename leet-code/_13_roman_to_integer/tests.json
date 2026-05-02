@@ -1,0 +1,22 @@
+{
+  "tests": [
+    {
+      "input": [
+        "III"
+      ],
+      "expected": 3
+    },
+    {
+      "input": [
+        "LVIII"
+      ],
+      "expected": 58
+    },
+    {
+      "input": [
+        "MCMXCIV"
+      ],
+      "expected": 1994
+    }
+  ]
+}
