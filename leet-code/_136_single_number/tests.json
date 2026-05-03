@@ -1,0 +1,34 @@
+{
+  "tests": [
+    {
+      "input": {
+        "nums": [
+          2,
+          2,
+          1
+        ]
+      },
+      "expected": 1
+    },
+    {
+      "input": {
+        "nums": [
+          4,
+          1,
+          2,
+          1,
+          2
+        ]
+      },
+      "expected": 4
+    },
+    {
+      "input": {
+        "nums": [
+          1
+        ]
+      },
+      "expected": 1
+    }
+  ]
+}
